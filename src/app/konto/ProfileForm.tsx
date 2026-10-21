@@ -5,9 +5,16 @@ import { updateProfile } from "./actions";
 import { SPECIALTIES } from "@/data/listings";
 import { inputClass, labelClass, primaryButton } from "@/components/form";
 
-type Props = { fullName: string; phone: string; bio: string; specialties: string[]; email: string };
+type Props = {
+  fullName: string;
+  phone: string;
+  bio: string;
+  specialties: string[];
+  email: string;
+  hasInsurance?: boolean;
+};
 
-export function ProfileForm({ fullName, phone, bio, specialties, email }: Props) {
+export function ProfileForm({ fullName, phone, bio, specialties, email, hasInsurance = false }: Props) {
   const [state, action, pending] = useFormAction(updateProfile);
 
   return (
@@ -44,6 +51,10 @@ export function ProfileForm({ fullName, phone, bio, specialties, email }: Props)
           ))}
         </div>
       </fieldset>
+      <label className="flex items-center gap-2 text-sm sm:col-span-2">
+        <input type="checkbox" name="has_insurance" defaultChecked={hasInsurance} className="h-4 w-4 accent-lacquer" />
+        Mam ubezpieczenie OC w zakresie wykonywanych usług
+      </label>
       <label className={`${labelClass} sm:col-span-2`}>
         <span className="text-muted">O mnie</span>
         <textarea

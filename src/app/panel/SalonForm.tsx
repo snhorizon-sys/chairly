@@ -26,6 +26,27 @@ export function SalonForm() {
         <input name="address" maxLength={200} className={inputClass} placeholder="ul. Kraszewskiego 10" />
         <span className="text-xs text-muted">Pokażemy go dopiero po potwierdzeniu rezerwacji.</span>
       </label>
+      <label className={labelClass}>
+        <span className="text-muted">Piętro</span>
+        <input name="floor" maxLength={40} className={inputClass} placeholder="parter, 2. piętro" />
+      </label>
+      <label className={labelClass}>
+        <span className="text-muted">Winda</span>
+        <select name="has_elevator" defaultValue="" className={inputClass}>
+          <option value="">Nie podano</option>
+          <option value="yes">Jest</option>
+          <option value="no">Brak</option>
+        </select>
+      </label>
+      <label className={`${labelClass} sm:col-span-2`}>
+        <span className="text-muted">Parking</span>
+        <input name="parking" maxLength={200} className={inputClass} placeholder="np. bezpłatny w podwórzu, strefa płatna przed lokalem" />
+      </label>
+      <label className={`${labelClass} sm:col-span-2`}>
+        <span className="text-muted">Jak dojść</span>
+        <textarea name="directions" rows={2} maxLength={500} className={inputClass} placeholder="Wejście od podwórza, domofon 12" />
+        <span className="text-xs text-muted">Pokażemy dopiero po potwierdzeniu rezerwacji.</span>
+      </label>
       <label className={`${labelClass} sm:col-span-2`}>
         <span className="text-muted">O salonie</span>
         <textarea name="description" rows={3} maxLength={2000} className={inputClass} placeholder="Klimat, parking, godziny otwarcia" />

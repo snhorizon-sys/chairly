@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { requireUser } from "@/lib/auth";
+import { createSupabaseServer } from "@/lib/supabase-server";
 import { ProfileForm } from "./ProfileForm";
 import { becomeHost } from "@/app/panel/actions";
 import { secondaryButton } from "@/components/form";
@@ -17,6 +18,10 @@ export default function AccountPage() {
 
 async function Account() {
   const user = await requireUser("/konto");
+
+  // Osobne zapytanie: kolumna has_insurance pochodzi z migracji 0003, a brak jej nie może zepsuć profilu
+  const sb = await createSupabaseServer();
+  const { data: extra } = await sb.from("profiles").select("has_insurance").eq("id", user.id).maybeSingle();
 
   return (
     <>
@@ -49,6 +54,7 @@ async function Account() {
           bio={user.bio ?? ""}
           specialties={user.specialties}
           email={user.email}
+          hasInsurance={extra?.has_insurance ?? false}
         />
       </div>
     </>
