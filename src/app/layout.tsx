@@ -6,7 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Fotelia – wynajem stanowisk w salonach beauty",
+  title: "Chairly – wynajem stanowisk w salonach beauty",
   description:
     "Wynajmij fotel, gabinet, salę szkoleniową lub przestrzeń na event w salonach beauty w Twojej okolicy.",
 };

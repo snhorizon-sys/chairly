@@ -6,8 +6,8 @@ export function Footer() {
     <footer className="mt-24 border-t border-line bg-paper">
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm text-muted sm:grid-cols-3 sm:px-6">
         <div>
-          <p className="font-display text-lg font-bold text-ink">Fotelia</p>
-          <p className="mt-2 max-w-xs">Wolne fotele, gabinety i sale w salonach beauty. Nazwa robocza.</p>
+          <p className="font-display text-lg font-bold text-ink">Chairly</p>
+          <p className="mt-2 max-w-xs">Wolne fotele, gabinety i sale w salonach beauty.</p>
           {process.env.NODE_ENV === "development" && (
             <p className="mt-3 text-xs">Źródło danych: {hasSupabase ? "Supabase" : "przykładowe dane (brak kluczy w .env.local)"}</p>
           )}

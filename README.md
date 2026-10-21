@@ -1,4 +1,4 @@
-# Fotelia (nazwa robocza)
+# Chairly
 
 Platforma do wynajmu stanowisk, gabinetów, sal szkoleniowych i przestrzeni na eventy w salonach beauty.
 

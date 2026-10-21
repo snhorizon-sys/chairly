@@ -1,5 +1,5 @@
 -- =====================================================================
--- Fotelia: schemat bazy (Supabase / PostgreSQL)
+-- Chairly: schemat bazy (Supabase / PostgreSQL)
 -- Uruchom w Supabase: SQL Editor -> New query -> wklej całość -> Run
 -- =====================================================================
 
