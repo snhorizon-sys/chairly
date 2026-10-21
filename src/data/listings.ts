@@ -23,7 +23,50 @@ export type Listing = {
   freeToday: [number, number][];
   verified: boolean;
   tone: string; // kolor kafelka zastępujący zdjęcie w podglądzie
+  // zasady i szczegóły (opcjonalne, dane przykładowe ich nie mają)
+  confirmation?: ConfirmationMode;
+  cancellation?: CancellationPolicy;
+  minHours?: number;
+  deposit?: number;
+  noticeDays?: number;
+  rules?: string[];
+  requirements?: string[];
+  requiresInsurance?: boolean;
+  amenities?: string[];
+  layouts?: string[];
+  cateringAllowed?: boolean;
+  setupInfo?: string;
+  floor?: string;
+  hasElevator?: boolean;
+  parking?: string;
 };
+
+export type ConfirmationMode = "instant" | "manual";
+export type CancellationPolicy = "flexible" | "moderate" | "strict";
+
+export const CONFIRMATION_LABEL: Record<ConfirmationMode, string> = {
+  instant: "Rezerwacja natychmiast",
+  manual: "Salon potwierdza rezerwację",
+};
+
+export const CANCELLATION_LABEL: Record<CancellationPolicy, string> = {
+  flexible: "Elastyczne: bezpłatne anulowanie do 24 godzin przed",
+  moderate: "Umiarkowane: bezpłatne anulowanie do 3 dni przed",
+  strict: "Rygorystyczne: bezpłatne anulowanie do 7 dni przed",
+};
+
+export const AMENITIES = [
+  "Szatnia",
+  "Kuchnia / aneks",
+  "Wi-Fi",
+  "Recepcja",
+  "Strefa oczekiwania",
+  "Toaleta dla klientów",
+  "Klimatyzacja",
+  "Pochłaniacz / wentylacja",
+];
+
+export const LAYOUTS = ["Teatralny", "Warsztatowy (stoły)", "Kino", "Bankietowy", "Wolna aranżacja"];
 
 export const TYPE_LABEL: Record<ListingType, string> = {
   stanowisko: "Stanowisko lub gabinet",

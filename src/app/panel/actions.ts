@@ -4,7 +4,7 @@ import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth";
 import { createSupabaseServer } from "@/lib/supabase-server";
-import { SPECIALTIES, type ListingType } from "@/data/listings";
+import { AMENITIES, LAYOUTS, SPECIALTIES, type CancellationPolicy, type ConfirmationMode, type ListingType } from "@/data/listings";
 import type { FormState } from "@/components/form";
 
 const TYPES: ListingType[] = ["stanowisko", "sala", "event"];
@@ -36,6 +36,19 @@ function price(fd: FormData, key: string) {
   return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : NaN;
 }
 
+/** Pole tak / nie / nie podano */
+function triState(fd: FormData, key: string) {
+  const v = text(fd, key);
+  return v === "yes" ? true : v === "no" ? false : null;
+}
+
+function wholeNumber(fd: FormData, key: string, max: number) {
+  const raw = text(fd, key);
+  if (!raw) return null;
+  const n = Number(raw);
+  return Number.isInteger(n) && n >= 0 && n <= max ? n : NaN;
+}
+
 async function ownSalon(userId: string) {
   const sb = await createSupabaseServer();
   const { data } = await sb.from("salons").select("id, name").eq("owner_id", userId).maybeSingle();
@@ -65,6 +78,10 @@ export async function createSalon(_prev: FormState, fd: FormData): Promise<FormS
     district: text(fd, "district").slice(0, 80) || null,
     address: text(fd, "address").slice(0, 200) || null,
     description: text(fd, "description").slice(0, 2000) || null,
+    floor: text(fd, "floor").slice(0, 40) || null,
+    has_elevator: triState(fd, "has_elevator"),
+    parking: text(fd, "parking").slice(0, 200) || null,
+    directions: text(fd, "directions").slice(0, 500) || null,
   });
   if (error) {
     if (error.code === "23505") return { error: "To konto ma już salon." };
@@ -95,6 +112,21 @@ export async function createListing(_prev: FormState, fd: FormData): Promise<For
   if (capacity != null && !(Number.isInteger(capacity) && capacity > 0))
     return { error: "Liczba osób musi być liczbą całkowitą." };
 
+  const confirmationRaw = text(fd, "confirmation");
+  const confirmation: ConfirmationMode = confirmationRaw === "instant" ? "instant" : "manual";
+  const cancellationRaw = text(fd, "cancellation");
+  const cancellation: CancellationPolicy = (["flexible", "moderate", "strict"] as const).includes(
+    cancellationRaw as CancellationPolicy,
+  )
+    ? (cancellationRaw as CancellationPolicy)
+    : "moderate";
+  const minHours = wholeNumber(fd, "min_hours", 24) ?? 1;
+  const noticeDays = wholeNumber(fd, "notice_days", 180);
+  const deposit = price(fd, "deposit");
+  if (Number.isNaN(minHours) || Number.isNaN(noticeDays) || minHours < 1)
+    return { error: "Minimalny czas (1–24 godz.) i okres wypowiedzenia (0–180 dni) muszą być liczbami całkowitymi." };
+  if (Number.isNaN(deposit)) return { error: "Kaucja musi być kwotą większą od zera." };
+
   const rules: { weekday: number; start_time: string; end_time: string }[] = [];
   for (let d = 0; d < 7; d++) {
     if (!fd.get(`day_${d}`)) continue;
@@ -124,6 +156,18 @@ export async function createListing(_prev: FormState, fd: FormData): Promise<For
       price_day: priceDay,
       price_month: priceMonth,
       capacity,
+      confirmation,
+      cancellation,
+      min_hours: minHours,
+      deposit,
+      notice_days: noticeDays,
+      rules: lines(fd, "rules"),
+      requirements: lines(fd, "requirements"),
+      requires_insurance: fd.get("requires_insurance") === "on",
+      amenities: fd.getAll("amenities").map(String).filter((a) => AMENITIES.includes(a)),
+      layouts: type === "stanowisko" ? [] : fd.getAll("layouts").map(String).filter((l) => LAYOUTS.includes(l)),
+      catering_allowed: type === "stanowisko" ? null : triState(fd, "catering_allowed"),
+      setup_info: type === "stanowisko" ? null : text(fd, "setup_info").slice(0, 500) || null,
       tone: TONES[Math.floor(Math.random() * TONES.length)],
     })
     .select("id")

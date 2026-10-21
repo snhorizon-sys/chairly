@@ -18,6 +18,7 @@ export async function updateProfile(_prev: FormState, fd: FormData): Promise<For
       phone: String(fd.get("phone") ?? "").trim().slice(0, 30) || null,
       bio: String(fd.get("bio") ?? "").trim().slice(0, 1500) || null,
       specialties: fd.getAll("specialties").map(String).filter((s) => SPECIALTIES.includes(s)),
+      has_insurance: fd.get("has_insurance") === "on",
     })
     .eq("id", user.id);
 

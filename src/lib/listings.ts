@@ -1,6 +1,12 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { getSupabase } from "./supabase";
-import { sampleListings, type Listing, type ListingType } from "@/data/listings";
+import {
+  sampleListings,
+  type CancellationPolicy,
+  type ConfirmationMode,
+  type Listing,
+  type ListingType,
+} from "@/data/listings";
 
 type CardRow = {
   id: string;
@@ -22,6 +28,21 @@ type CardRow = {
   verified: boolean;
   rating: string;
   review_count: number;
+  confirmation: ConfirmationMode;
+  cancellation: CancellationPolicy;
+  min_hours: number;
+  deposit: string | null;
+  notice_days: number | null;
+  rules: string[];
+  requirements: string[];
+  requires_insurance: boolean;
+  amenities: string[];
+  layouts: string[];
+  catering_allowed: boolean | null;
+  setup_info: string | null;
+  floor: string | null;
+  has_elevator: boolean | null;
+  parking: string | null;
 };
 
 type RuleRow = { listing_id: string; start_time: string; end_time: string };
@@ -83,6 +104,21 @@ export async function getListings(): Promise<Listing[]> {
     freeToday: (freeByListing.get(row.id) ?? []).sort((a, b) => a[0] - b[0]),
     verified: row.verified,
     tone: row.tone ?? "#E3E6EA",
+    confirmation: row.confirmation,
+    cancellation: row.cancellation,
+    minHours: row.min_hours,
+    deposit: num(row.deposit),
+    noticeDays: row.notice_days ?? undefined,
+    rules: row.rules,
+    requirements: row.requirements,
+    requiresInsurance: row.requires_insurance,
+    amenities: row.amenities,
+    layouts: row.layouts,
+    cateringAllowed: row.catering_allowed ?? undefined,
+    setupInfo: row.setup_info ?? undefined,
+    floor: row.floor ?? undefined,
+    hasElevator: row.has_elevator ?? undefined,
+    parking: row.parking ?? undefined,
   }));
 }
 

@@ -3,7 +3,15 @@
 import { useState } from "react";
 import { useFormAction } from "@/components/useFormAction";
 import { createListing } from "@/app/panel/actions";
-import { SPECIALTIES, TYPE_LABEL, type ListingType } from "@/data/listings";
+import {
+  AMENITIES,
+  CANCELLATION_LABEL,
+  CONFIRMATION_LABEL,
+  LAYOUTS,
+  SPECIALTIES,
+  TYPE_LABEL,
+  type ListingType,
+} from "@/data/listings";
 import { inputClass, labelClass, primaryButton, secondaryButton } from "@/components/form";
 
 // Kolejność od poniedziałku; wartość to numer dnia w bazie (0 = niedziela)
@@ -78,7 +86,57 @@ export function ListingForm() {
             <input name="capacity" type="number" min={1} className={inputClass} />
           </label>
         )}
+        <fieldset className="sm:col-span-2">
+          <legend className="text-sm text-muted">Udogodnienia wspólne</legend>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {AMENITIES.map((a) => (
+              <label key={a} className="cursor-pointer">
+                <input type="checkbox" name="amenities" value={a} className="peer sr-only" />
+                <span className="inline-block rounded-full border border-line px-3 py-1.5 text-sm peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-lacquer">
+                  {a}
+                </span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
       </section>
+
+      {type !== "stanowisko" && (
+        <section className="grid gap-4 rounded-2xl border border-line bg-paper p-6 sm:grid-cols-2">
+          <h2 className="text-lg font-bold sm:col-span-2">Sala i event</h2>
+          <fieldset className="sm:col-span-2">
+            <legend className="text-sm text-muted">Dostępne układy sali</legend>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {LAYOUTS.map((l) => (
+                <label key={l} className="cursor-pointer">
+                  <input type="checkbox" name="layouts" value={l} className="peer sr-only" />
+                  <span className="inline-block rounded-full border border-line px-3 py-1.5 text-sm peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-lacquer">
+                    {l}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+          <label className={labelClass}>
+            <span className="text-muted">Catering własny najemcy</span>
+            <select name="catering_allowed" defaultValue="" className={inputClass}>
+              <option value="">Nie podano</option>
+              <option value="yes">Dozwolony</option>
+              <option value="no">Niedozwolony</option>
+            </select>
+          </label>
+          <label className={labelClass}>
+            <span className="text-muted">Montaż i demontaż</span>
+            <textarea
+              name="setup_info"
+              rows={3}
+              maxLength={500}
+              className={inputClass}
+              placeholder="np. wstęp na godzinę przed, sprzątanie po evencie w cenie"
+            />
+          </label>
+        </section>
+      )}
 
       <section className="grid gap-4 rounded-2xl border border-line bg-paper p-6 sm:grid-cols-3">
         <div className="sm:col-span-3">
@@ -97,6 +155,62 @@ export function ListingForm() {
             <input name={name} type="number" min={1} step="0.01" inputMode="decimal" className={inputClass} />
           </label>
         ))}
+      </section>
+
+      <section className="grid gap-4 rounded-2xl border border-line bg-paper p-6 sm:grid-cols-2">
+        <h2 className="text-lg font-bold sm:col-span-2">Zasady najmu</h2>
+        <label className={labelClass}>
+          <span className="text-muted">Potwierdzanie rezerwacji</span>
+          <select name="confirmation" defaultValue="manual" className={inputClass}>
+            {Object.entries(CONFIRMATION_LABEL).map(([v, l]) => (
+              <option key={v} value={v}>
+                {l}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={labelClass}>
+          <span className="text-muted">Anulowanie</span>
+          <select name="cancellation" defaultValue="moderate" className={inputClass}>
+            {Object.entries(CANCELLATION_LABEL).map(([v, l]) => (
+              <option key={v} value={v}>
+                {l}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className={labelClass}>
+          <span className="text-muted">Minimalny czas rezerwacji (godz.)</span>
+          <input name="min_hours" type="number" min={1} max={24} defaultValue={1} className={inputClass} />
+        </label>
+        <label className={labelClass}>
+          <span className="text-muted">Kaucja (zł)</span>
+          <input name="deposit" type="number" min={1} step="0.01" inputMode="decimal" className={inputClass} />
+          <span className="text-xs text-muted">Zostaw puste, jeśli nie pobierasz kaucji.</span>
+        </label>
+        <label className={labelClass}>
+          <span className="text-muted">Wypowiedzenie przy najmie miesięcznym (dni)</span>
+          <input name="notice_days" type="number" min={0} max={180} className={inputClass} placeholder="30" />
+        </label>
+        <label className="flex items-center gap-2 self-end pb-2 text-sm">
+          <input type="checkbox" name="requires_insurance" className="h-4 w-4 accent-lacquer" />
+          Wymagam ubezpieczenia OC najemcy
+        </label>
+        <label className={labelClass}>
+          <span className="text-muted">Zasady korzystania</span>
+          <textarea name="rules" rows={4} className={inputClass} placeholder={"Bez zapachowych produktów\nSprzątanie stanowiska po pracy"} />
+          <span className="text-xs text-muted">Każda pozycja w nowej linii.</span>
+        </label>
+        <label className={labelClass}>
+          <span className="text-muted">Wymagania wobec najemcy</span>
+          <textarea
+            name="requirements"
+            rows={4}
+            className={inputClass}
+            placeholder={"Certyfikat ukończenia kursu\nWłasne kosmetyki i narzędzia"}
+          />
+          <span className="text-xs text-muted">Każda pozycja w nowej linii.</span>
+        </label>
       </section>
 
       <section className="rounded-2xl border border-line bg-paper p-6">
