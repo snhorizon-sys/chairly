@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { requireUser } from "@/lib/auth";
 import { ProfileForm } from "./ProfileForm";
+import { becomeHost } from "@/app/panel/actions";
+import { secondaryButton } from "@/components/form";
 
 export default function AccountPage() {
   return (
@@ -28,6 +30,17 @@ async function Account() {
         <Link href="/panel" className="mt-3 inline-block text-sm font-medium underline underline-offset-4">
           Przejdź do panelu salonu
         </Link>
+      )}
+      {user.role === "renter" && (
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-line bg-paper p-5">
+          <div>
+            <p className="font-semibold">Prowadzisz salon?</p>
+            <p className="text-sm text-muted">Przełącz konto, żeby dodawać stanowiska i sale. Rezerwować u innych możesz dalej.</p>
+          </div>
+          <form action={becomeHost}>
+            <button className={secondaryButton}>Przełącz na konto salonu</button>
+          </form>
+        </div>
       )}
       <div className="mt-8">
         <ProfileForm
