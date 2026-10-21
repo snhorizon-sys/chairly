@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { SearchForm } from "@/components/SearchForm";
 import { ListingCard } from "@/components/ListingCard";
-import { TYPE_LABEL, type ListingType } from "@/data/listings";
+import { ScrollRow } from "@/components/ScrollRow";
+import { TYPE_LABEL, type Listing, type ListingType } from "@/data/listings";
 import { getListings } from "@/lib/listings";
 
 const TYPES: { type: ListingType; text: string }[] = [
@@ -25,17 +26,24 @@ function ofertLabel(n: number) {
   return `${n} ofert`;
 }
 
+const rowItem = "w-[15.5rem] shrink-0 snap-start sm:w-[17rem]";
+
 export default async function Home() {
   const listings = await getListings();
-  const today = listings.filter((l) => l.city === "Poznań" && l.freeToday.length > 0).slice(0, 3);
+  const freeToday = listings.filter((l) => l.freeToday.length > 0);
+
+  // Miasta od tego z największą liczbą ofert
+  const byCity = new Map<string, Listing[]>();
+  for (const l of listings) byCity.set(l.city, [...(byCity.get(l.city) ?? []), l]);
+  const cities = Array.from(byCity.entries()).sort((a, b) => b[1].length - a[1].length);
 
   return (
     <>
-      <section className="mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 sm:pt-20">
-        <h1 className="max-w-3xl text-4xl font-bold leading-[1.05] sm:text-6xl">
+      <section className="mx-auto max-w-6xl px-4 pb-10 pt-10 text-center sm:px-6 sm:pt-14">
+        <h1 className="mx-auto max-w-3xl text-3xl font-bold leading-[1.1] sm:text-5xl">
           Fotel na dziś, gabinet na miesiąc, sala na szkolenie.
         </h1>
-        <p className="mt-5 max-w-xl text-lg text-muted">
+        <p className="mx-auto mt-4 max-w-xl text-muted sm:text-lg">
           Salony beauty wynajmują tu wolne stanowiska, a fryzjerki, kosmetolożki i stylistki znajdują miejsce do pracy
           bez zakładania własnego lokalu.
         </p>
@@ -44,19 +52,26 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold sm:text-3xl">Wolne dziś w Poznaniu</h2>
-          <Link href="/oferty?miasto=Poznań" className="text-sm font-medium underline underline-offset-4">
-            Wszystkie oferty
-          </Link>
-        </div>
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {today.map((l) => (
-            <ListingCard key={l.id} listing={l} />
-          ))}
-        </div>
-      </section>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {freeToday.length > 0 && (
+          <ScrollRow title="Wolne dziś" href="/oferty?dzis=1">
+            {freeToday.map((l) => (
+              <div key={l.id} className={rowItem}>
+                <ListingCard listing={l} />
+              </div>
+            ))}
+          </ScrollRow>
+        )}
+        {cities.map(([city, items]) => (
+          <ScrollRow key={city} title={`Popularne w: ${city}`} href={`/oferty?miasto=${encodeURIComponent(city)}`}>
+            {items.map((l) => (
+              <div key={l.id} className={rowItem}>
+                <ListingCard listing={l} />
+              </div>
+            ))}
+          </ScrollRow>
+        ))}
+      </div>
 
       <section className="mx-auto mt-24 max-w-6xl px-4 sm:px-6">
         <h2 className="text-2xl font-bold sm:text-3xl">Co można wynająć</h2>

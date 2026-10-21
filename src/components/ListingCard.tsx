@@ -1,52 +1,54 @@
 import Link from "next/link";
 import { type Listing, TYPE_LABEL, priceLabel } from "@/data/listings";
-import { AvailabilityBar } from "./AvailabilityBar";
+import { HeartButton } from "./HeartButton";
+
+const fmt = (h: number) => `${Math.floor(h)}:${String(Math.round((h % 1) * 60)).padStart(2, "0")}`;
 
 export function ListingCard({ listing }: { listing: Listing }) {
   const price = priceLabel(listing);
+  const freeToday = listing.freeToday.length
+    ? `Wolne dziś: ${listing.freeToday.map(([a, b]) => `${fmt(a)}–${fmt(b)}`).join(", ")}`
+    : null;
+
   return (
-    <Link
-      href={`/oferty/${listing.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-paper hover:border-ink/40"
-    >
-      {/* Miejsce na zdjęcie salonu */}
-      <div className="relative aspect-[4/3]" style={{ background: listing.tone }}>
-        <span className="absolute left-3 top-3 rounded-full bg-paper/90 px-2.5 py-1 text-xs font-medium">
-          {TYPE_LABEL[listing.type]}
-        </span>
-        {listing.confirmation === "instant" && (
-          <span className="absolute bottom-3 left-3 rounded-full bg-paper/90 px-2.5 py-1 text-xs font-medium">
-            ⚡ Rezerwacja natychmiast
-          </span>
-        )}
-        {listing.verified && (
-          <span className="absolute right-3 top-3 rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-paper">
-            Zweryfikowany
-          </span>
-        )}
-      </div>
-      <div className="flex flex-1 flex-col gap-3 p-4">
-        <div>
-          <h3 className="text-lg font-semibold leading-tight group-hover:underline">{listing.title}</h3>
-          <p className="mt-1 text-sm text-muted">
-            {listing.salon}, {listing.district}, {listing.city}
-          </p>
-        </div>
-        <AvailabilityBar free={listing.freeToday} compact />
-        <div className="mt-auto flex items-end justify-between pt-1">
-          <p>
-            <span className="font-display text-xl font-bold">{price.value}</span>{" "}
-            <span className="text-sm text-muted">{price.unit}</span>
-          </p>
-          {listing.reviews > 0 ? (
-            <p className="text-sm">
-              ★ {listing.rating.toFixed(1)} <span className="text-muted">({listing.reviews})</span>
-            </p>
-          ) : (
-            <p className="text-sm text-muted">Nowa oferta</p>
+    <div className="group relative">
+      <Link href={`/oferty/${listing.id}`} className="block">
+        {/* Miejsce na zdjęcie salonu */}
+        <div className="relative aspect-[5/4] overflow-hidden rounded-2xl" style={{ background: listing.tone }}>
+          {listing.verified && (
+            <span className="absolute left-3 top-3 rounded-full bg-paper px-3 py-1 text-xs font-semibold shadow-sm">
+              Zweryfikowany
+            </span>
+          )}
+          {listing.confirmation === "instant" && (
+            <span className="absolute bottom-3 left-3 rounded-full bg-paper/95 px-3 py-1 text-xs font-medium shadow-sm">
+              ⚡ Rezerwacja natychmiast
+            </span>
           )}
         </div>
+        <div className="mt-3">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-base font-semibold leading-snug group-hover:underline">{listing.title}</h3>
+            {listing.reviews > 0 && (
+              <p className="shrink-0 text-sm">
+                ★ {listing.rating.toLocaleString("pl-PL", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}
+              </p>
+            )}
+          </div>
+          <p className="mt-0.5 text-sm text-muted">
+            {listing.salon}, {listing.district || listing.city}
+          </p>
+          <p className="text-sm text-muted">{TYPE_LABEL[listing.type]}</p>
+          {freeToday && <p className="text-sm text-sage">{freeToday}</p>}
+          <p className="mt-1.5">
+            <span className="font-semibold">{price.value}</span> <span className="text-sm">{price.unit}</span>
+            {listing.reviews === 0 && <span className="ml-2 text-sm text-muted">Nowa oferta</span>}
+          </p>
+        </div>
+      </Link>
+      <div className="absolute right-2 top-2 z-10">
+        <HeartButton id={listing.id} label={listing.title} />
       </div>
-    </Link>
+    </div>
   );
 }
