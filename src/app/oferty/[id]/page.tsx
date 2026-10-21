@@ -213,6 +213,65 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
             </div>
           )}
 
+          {l.reviewList && l.reviewList.length > 0 && (
+            <div className="mt-10 border-t border-line pt-8">
+              <h2 className="text-xl font-bold">
+                ★ {l.rating.toFixed(1)} · {l.reviews} {l.reviews === 1 ? "opinia" : "opinii"}
+              </h2>
+              <ul className="mt-5 grid gap-6 sm:grid-cols-2">
+                {l.reviewList.map((r) => (
+                  <li key={`${r.author}-${r.date}`}>
+                    <div className="flex items-center gap-3">
+                      <span
+                        aria-hidden
+                        className="flex h-10 w-10 items-center justify-center rounded-full bg-ink text-sm font-semibold text-paper"
+                      >
+                        {r.author.charAt(0)}
+                      </span>
+                      <div>
+                        <p className="font-semibold leading-tight">{r.author}</p>
+                        <p className="text-sm text-muted">{r.role}</p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-sm text-muted">
+                      {"★".repeat(r.rating)}
+                      <span className="text-line">{"★".repeat(5 - r.rating)}</span> · {r.date}
+                    </p>
+                    <p className="mt-1">{r.text}</p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {l.host && (
+            <div className="mt-10 border-t border-line pt-8">
+              <h2 className="text-xl font-bold">Poznaj gospodarza</h2>
+              <div className="mt-4 flex gap-4 rounded-2xl border border-line bg-paper p-5">
+                <span
+                  aria-hidden
+                  className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-lacquer text-2xl font-bold text-paper"
+                >
+                  {l.host.name.charAt(0)}
+                </span>
+                <div>
+                  <p className="text-lg font-semibold">
+                    {l.host.name}
+                    {l.host.verified && (
+                      <span className="ml-2 rounded-full bg-ink px-2 py-0.5 align-middle text-xs font-medium text-paper">
+                        Zweryfikowany
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-sm text-muted">
+                    Na Chairly od {l.host.since} · {l.host.responseTime}
+                  </p>
+                  <p className="mt-2">{l.host.bio}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mt-8 rounded-2xl border border-line bg-paper p-5">
             <h2 className="font-bold">Umowa najmu stanowiska</h2>
             <p className="mt-1 text-muted">

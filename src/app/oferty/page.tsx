@@ -1,10 +1,17 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { ListingCard } from "@/components/ListingCard";
-import { SPECIALTIES, TYPE_LABEL, type ListingType } from "@/data/listings";
+import { AMENITIES, SPECIALTIES, TYPE_LABEL, type ListingType } from "@/data/listings";
 import { getListings } from "@/lib/listings";
 
-type Params = Promise<{ miasto?: string; typ?: string; specjalizacja?: string; dzis?: string }>;
+type Params = Promise<{
+  miasto?: string;
+  typ?: string;
+  specjalizacja?: string;
+  dzis?: string;
+  natychmiast?: string;
+  udogodnienie?: string;
+}>;
 
 export default function OffersPage({ searchParams }: { searchParams: Params }) {
   return (
@@ -15,7 +22,7 @@ export default function OffersPage({ searchParams }: { searchParams: Params }) {
 }
 
 async function Offers({ searchParams }: { searchParams: Params }) {
-  const { miasto = "", typ = "", specjalizacja = "", dzis } = await searchParams;
+  const { miasto = "", typ = "", specjalizacja = "", dzis, natychmiast, udogodnienie = "" } = await searchParams;
   const listings = await getListings();
   const CITIES = Array.from(new Set(listings.map((l) => l.city))).sort((a, b) => a.localeCompare(b, "pl"));
 
@@ -24,7 +31,9 @@ async function Offers({ searchParams }: { searchParams: Params }) {
       (!miasto || l.city.toLowerCase() === miasto.toLowerCase()) &&
       (!typ || l.type === typ) &&
       (!specjalizacja || l.specialties.includes(specjalizacja)) &&
-      (!dzis || l.freeToday.length > 0),
+      (!dzis || l.freeToday.length > 0) &&
+      (!natychmiast || l.confirmation === "instant") &&
+      (!udogodnienie || (l.amenities ?? []).includes(udogodnienie)),
   );
 
   const select = "w-full rounded-lg border border-line bg-paper px-3 py-2.5 outline-none focus:border-ink";
@@ -62,6 +71,25 @@ async function Offers({ searchParams }: { searchParams: Params }) {
                 <option key={s}>{s}</option>
               ))}
             </select>
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            <span className="text-muted">Udogodnienie</span>
+            <select name="udogodnienie" defaultValue={udogodnienie} className={select}>
+              <option value="">Dowolne</option>
+              {AMENITIES.map((a) => (
+                <option key={a}>{a}</option>
+              ))}
+            </select>
+          </label>
+          <label className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              name="natychmiast"
+              value="1"
+              defaultChecked={!!natychmiast}
+              className="h-4 w-4 accent-lacquer"
+            />
+            Rezerwacja natychmiast
           </label>
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" name="dzis" value="1" defaultChecked={!!dzis} className="h-4 w-4 accent-lacquer" />

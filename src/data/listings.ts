@@ -39,6 +39,24 @@ export type Listing = {
   floor?: string;
   hasElevator?: boolean;
   parking?: string;
+  host?: Host;
+  reviewList?: Review[];
+};
+
+export type Host = {
+  name: string;
+  since: number; // rok dołączenia
+  bio: string;
+  responseTime: string;
+  verified: boolean;
+};
+
+export type Review = {
+  author: string;
+  role: string;
+  date: string;
+  rating: number;
+  text: string;
 };
 
 export type ConfirmationMode = "instant" | "manual";
@@ -106,6 +124,20 @@ export const sampleListings: Listing[] = [
     freeToday: [[9, 13], [15, 19]],
     verified: true,
     tone: "#E7D9DC",
+    confirmation: "instant",
+    cancellation: "flexible",
+    minHours: 2,
+    deposit: 200,
+    noticeDays: 30,
+    rules: ["Sprzątanie stanowiska po pracy", "Własne kosmetyki i narzędzia", "Bez zapachowych produktów w trakcie wizyt innych osób"],
+    requirements: ["Certyfikat lub dyplom fryzjerski", "Własna baza klientów"],
+    requiresInsurance: true,
+    amenities: ["Wi-Fi", "Recepcja", "Strefa oczekiwania", "Toaleta dla klientów"],
+    floor: "Parter",
+    hasElevator: false,
+    parking: "Bezpłatny w podwórzu",
+    host: {"name": "Karolina", "since": 2023, "bio": "Prowadzę salon od ośmiu lat. Szukam spokojnych, odpowiedzialnych osób, które cenią dobrą atmosferę w pracy.", "responseTime": "Odpowiada zwykle w ciągu godziny", "verified": true},
+    reviewList: [{"author": "Marta", "role": "Fryzjerka", "date": "wrzesień 2026", "rating": 5, "text": "Czyste stanowisko, świetne światło i bardzo miła obsługa. Wracam co tydzień."}, {"author": "Paweł", "role": "Koloryst", "date": "sierpień 2026", "rating": 5, "text": "Wszystko zgodne z opisem, szybka odpowiedź na wiadomości."}, {"author": "Ola", "role": "Fryzjerka", "date": "lipiec 2026", "rating": 4, "text": "Dobra lokalizacja, czasem trochę głośno przy recepcji."}],
   },
   {
     id: "gabinet-kosmetologiczny-wilda",
@@ -126,6 +158,20 @@ export const sampleListings: Listing[] = [
     freeToday: [[12, 18]],
     verified: true,
     tone: "#D9E3DF",
+    confirmation: "manual",
+    cancellation: "moderate",
+    minHours: 3,
+    deposit: 300,
+    noticeDays: 30,
+    rules: ["Dezynfekcja gabinetu po każdym kliencie", "Dokumentacja zabiegów prowadzona przez najemcę"],
+    requirements: ["Dyplom kosmetologa", "Aktualne szkolenia BHP"],
+    requiresInsurance: true,
+    amenities: ["Klimatyzacja", "Pochłaniacz / wentylacja", "Szatnia", "Wi-Fi"],
+    floor: "1. piętro",
+    hasElevator: true,
+    parking: "Strefa płatna przed budynkiem",
+    host: {"name": "Anna", "since": 2022, "bio": "Kosmetolog z dziesięcioletnim doświadczeniem. Gabinet spełnia wymogi sanitarne do zabiegów inwazyjnych.", "responseTime": "Odpowiada zwykle w ciągu kilku godzin", "verified": true},
+    reviewList: [{"author": "Natalia", "role": "Stylistka brwi", "date": "październik 2026", "rating": 5, "text": "Idealny gabinet do pracy, autoklaw zawsze gotowy."}, {"author": "Kasia", "role": "Kosmetolog", "date": "wrzesień 2026", "rating": 5, "text": "Bardzo profesjonalnie. Gospodyni jasno określa zasady."}],
   },
   {
     id: "stanowisko-nails-stare-miasto",
@@ -147,6 +193,19 @@ export const sampleListings: Listing[] = [
     freeToday: [[8, 11], [14, 16], [18, 20]],
     verified: false,
     tone: "#E9E1D2",
+    confirmation: "instant",
+    cancellation: "flexible",
+    minHours: 1,
+    noticeDays: 14,
+    rules: ["Odkurzanie stanowiska po pracy", "Własne frezy i pilniki"],
+    requirements: ["Własne narzędzia"],
+    requiresInsurance: false,
+    amenities: ["Recepcja", "Strefa oczekiwania", "Wi-Fi"],
+    floor: "Parter",
+    hasElevator: true,
+    parking: "Parking miejski w pobliżu",
+    host: {"name": "Studio Nail Bar", "since": 2024, "bio": "Pięć stanowisk w sercu Starego Miasta, duży ruch klientek i profil salonu w mediach społecznościowych.", "responseTime": "Odpowiada zwykle w ciągu dnia", "verified": false},
+    reviewList: [{"author": "Dominika", "role": "Stylistka paznokci", "date": "wrzesień 2026", "rating": 5, "text": "Dużo klientek z ulicy, dobrze przygotowane stanowisko."}, {"author": "Ewelina", "role": "Stylistka paznokci", "date": "sierpień 2026", "rating": 4, "text": "Super lokalizacja, trochę ciasno przy pełnym obłożeniu."}],
   },
   {
     id: "barber-grunwald",
@@ -166,6 +225,20 @@ export const sampleListings: Listing[] = [
     freeToday: [],
     verified: true,
     tone: "#D8DCE6",
+    confirmation: "manual",
+    cancellation: "strict",
+    minHours: 4,
+    deposit: 400,
+    noticeDays: 30,
+    rules: ["Dyskrecja wobec klientów salonu", "Zachowanie porządku w strefie myjek"],
+    requirements: ["Własna baza klientów", "Referencje z poprzedniego miejsca pracy"],
+    requiresInsurance: true,
+    amenities: ["Wi-Fi", "Strefa oczekiwania", "Klimatyzacja"],
+    floor: "Parter",
+    hasElevator: false,
+    parking: "Parking przed lokalem",
+    host: {"name": "Tomek", "since": 2021, "bio": "Właściciel barbershopu. Stawiam na dobrą muzykę i zgrany zespół.", "responseTime": "Odpowiada zwykle w ciągu godziny", "verified": true},
+    reviewList: [{"author": "Bartek", "role": "Barber", "date": "wrzesień 2026", "rating": 5, "text": "Świetna ekipa, sprzęt na wysokim poziomie."}, {"author": "Michał", "role": "Barber", "date": "czerwiec 2026", "rating": 4, "text": "Dobre miejsce na dniówki w weekendy."}],
   },
   {
     id: "sala-szkoleniowa-centrum",
@@ -186,6 +259,22 @@ export const sampleListings: Listing[] = [
     freeToday: [[8, 20]],
     verified: true,
     tone: "#E3DCEA",
+    confirmation: "manual",
+    cancellation: "moderate",
+    minHours: 4,
+    deposit: 500,
+    rules: ["Zakaz używania sprzętu bez wcześniejszego instruktażu", "Sprzątanie po szkoleniu w cenie"],
+    requirements: ["Opis programu szkolenia", "Ubezpieczenie OC organizatora"],
+    requiresInsurance: true,
+    amenities: ["Klimatyzacja", "Wi-Fi", "Szatnia", "Kuchnia / aneks", "Toaleta dla klientów"],
+    floor: "2. piętro",
+    hasElevator: true,
+    parking: "Parking podziemny w budynku",
+    layouts: ["Warsztatowy (stoły)", "Teatralny", "Wolna aranżacja"],
+    cateringAllowed: true,
+    setupInfo: "Wstęp na godzinę przed szkoleniem, demontaż do 30 minut po zakończeniu.",
+    host: {"name": "Akademia Forma", "since": 2022, "bio": "Akademia szkoleniowa dla branży beauty. Pomagamy w organizacji wydarzeń i rekrutacji modelek.", "responseTime": "Odpowiada zwykle w ciągu godziny", "verified": true},
+    reviewList: [{"author": "Agnieszka", "role": "Trenerka", "date": "październik 2026", "rating": 5, "text": "Sala idealnie przygotowana, uczestniczki były zachwycone."}, {"author": "Justyna", "role": "Organizatorka kursów", "date": "wrzesień 2026", "rating": 5, "text": "Profesjonalna obsługa i dobry dojazd."}],
   },
   {
     id: "event-loft-garbary",
@@ -205,6 +294,22 @@ export const sampleListings: Listing[] = [
     freeToday: [],
     verified: true,
     tone: "#DDE2D6",
+    confirmation: "manual",
+    cancellation: "strict",
+    minHours: 6,
+    deposit: 1500,
+    rules: ["Cisza nocna po 22:00", "Zakaz używania konfetti i brokatu"],
+    requirements: ["Opis wydarzenia i planu godzinowego", "Ubezpieczenie OC organizatora"],
+    requiresInsurance: true,
+    amenities: ["Wi-Fi", "Szatnia", "Kuchnia / aneks", "Klimatyzacja", "Toaleta dla klientów"],
+    floor: "Parter",
+    hasElevator: true,
+    parking: "Parking dla gości przy budynku",
+    layouts: ["Kino", "Bankietowy", "Wolna aranżacja"],
+    cateringAllowed: true,
+    setupInfo: "Montaż dzień wcześniej po uzgodnieniu, demontaż do 3 godzin po wydarzeniu.",
+    host: {"name": "Garbary Loft", "since": 2023, "bio": "Przestrzeń na premiery, pokazy i sesje. Pomagamy z techniką i ochroną.", "responseTime": "Odpowiada zwykle w ciągu dnia", "verified": true},
+    reviewList: [{"author": "Marcelina", "role": "Organizatorka pokazu", "date": "wrzesień 2026", "rating": 5, "text": "Fantastyczna przestrzeń, obsługa techniczna bardzo pomocna."}, {"author": "Piotr", "role": "Fotograf", "date": "sierpień 2026", "rating": 5, "text": "Dużo światła i elastyczna aranżacja."}],
   },
   {
     id: "pmu-warszawa-mokotow",
@@ -224,6 +329,20 @@ export const sampleListings: Listing[] = [
     freeToday: [[10, 16]],
     verified: true,
     tone: "#EADBD3",
+    confirmation: "manual",
+    cancellation: "moderate",
+    minHours: 3,
+    deposit: 300,
+    noticeDays: 30,
+    rules: ["Dezynfekcja po każdym kliencie", "Wyłącznie zabiegi zgodne z zakresem kwalifikacji najemcy"],
+    requirements: ["Certyfikat makijażu permanentnego", "Aktualne badania sanitarne"],
+    requiresInsurance: true,
+    amenities: ["Klimatyzacja", "Wi-Fi", "Recepcja", "Pochłaniacz / wentylacja"],
+    floor: "3. piętro",
+    hasElevator: true,
+    parking: "Strefa płatna w okolicy",
+    host: {"name": "Brow Atelier", "since": 2022, "bio": "Pracownia brwi i makijażu permanentnego z pozytywną opinią sanepidu.", "responseTime": "Odpowiada zwykle w ciągu kilku godzin", "verified": true},
+    reviewList: [{"author": "Weronika", "role": "Linergistka", "date": "październik 2026", "rating": 5, "text": "Czysty gabinet z całym potrzebnym sprzętem."}, {"author": "Alicja", "role": "Linergistka", "date": "wrzesień 2026", "rating": 5, "text": "Polecam, bardzo uczciwe zasady współpracy."}],
   },
   {
     id: "masaz-wroclaw",
@@ -243,6 +362,19 @@ export const sampleListings: Listing[] = [
     freeToday: [[16, 20]],
     verified: false,
     tone: "#D6E0E3",
+    confirmation: "instant",
+    cancellation: "flexible",
+    minHours: 2,
+    noticeDays: 14,
+    rules: ["Cisza w korytarzu", "Wietrzenie pokoju po każdym kliencie"],
+    requirements: ["Dyplom masażysty lub certyfikat"],
+    requiresInsurance: false,
+    amenities: ["Szatnia", "Wi-Fi", "Toaleta dla klientów"],
+    floor: "1. piętro",
+    hasElevator: false,
+    parking: "Bezpłatny parking przy ulicy",
+    host: {"name": "Oaza Body", "since": 2024, "bio": "Kameralne studio masażu. Cenimy spokój i wzajemny szacunek.", "responseTime": "Odpowiada zwykle w ciągu dnia", "verified": false},
+    reviewList: [{"author": "Iwona", "role": "Masażystka", "date": "wrzesień 2026", "rating": 5, "text": "Cichy pokój, miły klimat."}, {"author": "Rafał", "role": "Fizjoterapeuta", "date": "sierpień 2026", "rating": 4, "text": "Dobra cena, trochę brakuje miejsca na przechowywanie rzeczy."}],
   },
 ];
 

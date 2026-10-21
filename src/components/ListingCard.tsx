@@ -14,6 +14,11 @@ export function ListingCard({ listing }: { listing: Listing }) {
         <span className="absolute left-3 top-3 rounded-full bg-paper/90 px-2.5 py-1 text-xs font-medium">
           {TYPE_LABEL[listing.type]}
         </span>
+        {listing.confirmation === "instant" && (
+          <span className="absolute bottom-3 left-3 rounded-full bg-paper/90 px-2.5 py-1 text-xs font-medium">
+            ⚡ Rezerwacja natychmiast
+          </span>
+        )}
         {listing.verified && (
           <span className="absolute right-3 top-3 rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-paper">
             Zweryfikowany
