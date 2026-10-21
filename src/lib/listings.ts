@@ -1,4 +1,4 @@
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { getSupabase } from "./supabase";
 import { sampleListings, type Listing, type ListingType } from "@/data/listings";
 
@@ -43,6 +43,7 @@ function warsawWeekday(date = new Date()) {
 export async function getListings(): Promise<Listing[]> {
   "use cache";
   cacheLife("minutes");
+  cacheTag("listings");
 
   const sb = getSupabase();
   if (!sb) return sampleListings;

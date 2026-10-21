@@ -20,6 +20,11 @@ Otwórz http://localhost:3000
 3. W pliku `.env.local` wpisz Project URL i Publishable key (Project Settings → API Keys)
 4. Zatrzymaj `npm run dev` (Ctrl+C) i uruchom ponownie
 
+5. SQL Editor → wklej `supabase/migrations/0002_auth_roles.sql` → **Run** (role i zabezpieczenia kont)
+6. Authentication → **URL Configuration**: Site URL `http://localhost:3000`, w Redirect URLs dodaj `http://localhost:3000/**`
+7. (na czas developmentu) Authentication → Sign In / Providers → Email → wyłącz **Confirm email**,
+   żeby nowe konta logowały się od razu. Darmowy plan wysyła tylko kilka maili na godzinę.
+
 Bez kluczy strona działa na danych przykładowych z `src/data/listings.ts`.
 W trybie dev stopka pokazuje, skąd pochodzą dane.
 
@@ -55,7 +60,13 @@ src/
     page.tsx              strona główna
     oferty/page.tsx       wyszukiwarka z filtrami
     oferty/[id]/page.tsx  szczegóły oferty i rezerwacja
-    dla-salonow/page.tsx  strona dla właścicieli salonów + formularz dodania oferty
+    dla-salonow/page.tsx  strona dla właścicieli salonów
+    logowanie/            logowanie i rejestracja (rola: najemca / salon)
+    auth/callback/        link z e-maila potwierdzającego
+    panel/                panel salonu: dane salonu, oferty, dodawanie oferty z grafikiem
+    konto/                profil użytkownika
+  proxy.ts                odświeżanie sesji przy każdym żądaniu
+  lib/                    supabase.ts (dane publiczne), supabase-server.ts (sesja), auth.ts, listings.ts
   components/             nagłówek, stopka, karta oferty, pasek dostępności, panel rezerwacji
   data/listings.ts        przykładowe oferty (do zastąpienia bazą danych)
 ```
@@ -63,7 +74,7 @@ src/
 ## Kolejne kroki
 
 1. ~~Schemat bazy w Supabase~~
-2. Logowanie (Supabase Auth)
+2. ~~Logowanie, konta i panel salonu~~
 3. Zdjęcia ofert (Supabase Storage) w miejsce kolorowych kafelków
 4. Kalendarz dostępności i rezerwacje z blokadą podwójnych terminów w bazie
 5. Płatności przez Stripe Connect (BLIK, Przelewy24, karta)

@@ -1,6 +1,4 @@
-import { SPECIALTIES, TYPE_LABEL } from "@/data/listings";
-
-const input = "w-full rounded-lg border border-line bg-paper px-3 py-2.5 outline-none focus:border-ink";
+import Link from "next/link";
 
 export default function ForSalonsPage() {
   return (
@@ -26,64 +24,26 @@ export default function ForSalonsPage() {
         ))}
       </div>
 
-      <section id="dodaj" className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.3fr]">
+      <section id="dodaj" className="mt-16 grid gap-8 rounded-3xl bg-ink p-8 text-paper sm:p-10 md:grid-cols-[1.4fr_1fr] md:items-center">
         <div>
-          <h2 className="text-3xl font-bold">Dodaj ofertę</h2>
-          <p className="mt-3 text-muted">
-            Zajmie to kilka minut. Zdjęcia i kalendarz dostępności dodasz w kolejnym kroku.
-          </p>
+          <h2 className="text-3xl font-bold">Dodaj salon w kilka minut</h2>
+          <ol className="mt-5 space-y-2 text-paper/80">
+            <li>1. Załóż konto salonu.</li>
+            <li>2. Uzupełnij nazwę, miasto i opis salonu.</li>
+            <li>3. Dodaj stanowiska z cenami i grafikiem tygodniowym.</li>
+          </ol>
         </div>
-        <form className="grid gap-4 rounded-2xl border border-line bg-paper p-6 sm:grid-cols-2">
-          <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-            <span className="text-muted">Nazwa salonu</span>
-            <input className={input} placeholder="np. Studio Lustro" />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-muted">Miasto</span>
-            <input className={input} placeholder="Poznań" />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-muted">Rodzaj miejsca</span>
-            <select className={input}>
-              {Object.entries(TYPE_LABEL).map(([v, l]) => (
-                <option key={v} value={v}>
-                  {l}
-                </option>
-              ))}
-            </select>
-          </label>
-          <fieldset className="sm:col-span-2">
-            <legend className="text-sm text-muted">Dla jakich specjalizacji</legend>
-            <div className="mt-2 flex flex-wrap gap-2">
-              {SPECIALTIES.map((s) => (
-                <label key={s} className="cursor-pointer">
-                  <input type="checkbox" className="peer sr-only" />
-                  <span className="inline-block rounded-full border border-line px-3 py-1.5 text-sm peer-checked:border-ink peer-checked:bg-ink peer-checked:text-paper peer-focus-visible:outline-2 peer-focus-visible:outline-lacquer">
-                    {s}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-muted">Cena za godzinę (zł)</span>
-            <input type="number" className={input} placeholder="35" />
-          </label>
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-muted">Cena za dzień (zł)</span>
-            <input type="number" className={input} placeholder="220" />
-          </label>
-          <label className="flex flex-col gap-1 text-sm sm:col-span-2">
-            <span className="text-muted">Opis</span>
-            <textarea rows={4} className={input} placeholder="Co wyróżnia stanowisko, co jest w cenie, zasady korzystania" />
-          </label>
-          <button
-            type="button"
-            className="rounded-xl bg-lacquer px-5 py-3 font-medium text-paper hover:bg-lacquer-dark sm:col-span-2 sm:justify-self-start"
+        <div className="flex flex-col gap-3">
+          <Link
+            href="/logowanie?tryb=rejestracja&rola=host&next=/panel"
+            className="rounded-xl bg-lacquer px-5 py-3 text-center font-medium hover:bg-lacquer-dark"
           >
-            Zapisz i przejdź do zdjęć
-          </button>
-        </form>
+            Załóż konto salonu
+          </Link>
+          <Link href="/logowanie?next=/panel" className="text-center text-sm text-paper/80 underline underline-offset-4">
+            Mam już konto
+          </Link>
+        </div>
       </section>
     </div>
   );
