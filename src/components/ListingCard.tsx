@@ -6,9 +6,7 @@ const fmt = (h: number) => `${Math.floor(h)}:${String(Math.round((h % 1) * 60)).
 
 export function ListingCard({ listing }: { listing: Listing }) {
   const price = priceLabel(listing);
-  const freeToday = listing.freeToday.length
-    ? `Wolne dziś: ${listing.freeToday.map(([a, b]) => `${fmt(a)}–${fmt(b)}`).join(", ")}`
-    : null;
+  const freeToday = [...listing.freeToday].sort((a, b) => a[0] - b[0]);
 
   return (
     <div className="group relative">
@@ -39,7 +37,19 @@ export function ListingCard({ listing }: { listing: Listing }) {
             {listing.salon}, {listing.district || listing.city}
           </p>
           <p className="text-sm text-muted">{TYPE_LABEL[listing.type]}</p>
-          {freeToday && <p className="text-sm text-sage">{freeToday}</p>}
+          {freeToday.length > 0 && (
+            <p className="mt-1 flex flex-wrap items-center gap-1.5 text-sm">
+              <span className="text-muted">Wolne dziś:</span>
+              {freeToday.map(([a, b]) => (
+                <span
+                  key={`${a}-${b}`}
+                  className="rounded-md bg-sage/15 px-1.5 py-0.5 text-xs font-semibold text-sage tabular-nums"
+                >
+                  {fmt(a)}–{fmt(b)}
+                </span>
+              ))}
+            </p>
+          )}
           <p className="mt-1.5">
             <span className="font-semibold">{price.value}</span> <span className="text-sm">{price.unit}</span>
             {listing.reviews === 0 && <span className="ml-2 text-sm text-muted">Nowa oferta</span>}

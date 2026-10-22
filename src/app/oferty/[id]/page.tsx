@@ -45,7 +45,7 @@ export default async function ListingPage({ params }: { params: Promise<{ id: st
 
           <div className="mt-8">
             <h2 className="text-xl font-bold">Dostępność dziś</h2>
-            <div className="mt-3 max-w-md">
+            <div className="mt-3 max-w-xl">
               <AvailabilityBar free={l.freeToday} />
             </div>
           </div>
