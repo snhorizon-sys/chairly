@@ -14,7 +14,9 @@
 - [ ] Wiadomości między najemcą a salonem
 - [ ] Ulubione zapisywane na koncie (dziś serduszko działa tylko w przeglądarce)
 - [ ] Upload certyfikatów najemców
-- [ ] Adres salonu jest publicznie czytelny w bazie (polityka RLS na tabeli `salons`), mimo że formularz obiecuje pokazanie go po potwierdzeniu rezerwacji
+- [x] Adres salonu publicznie czytelny w bazie: naprawione migracją `0004` (adres, współrzędne i wskazówki dojścia widzi tylko właściciel, admin i najemca z potwierdzoną rezerwacją). Do uruchomienia w Supabase po `0003`
+- [ ] Pokazać adres i wskazówki dojścia najemcy po potwierdzeniu rezerwacji w aplikacji: wywołać funkcję `salon_private_details(salon_id)` (gotowa w `0004`). Uwaga: na tabeli `salons` nie robić `select("*")`
+- [ ] Mapa a ukryte współrzędne: `0004` ukrywa `lat`/`lng` przed publicznością. Zdecydować: przybliżona lokalizacja na mapie (jak Airbnb, rekomendowane, pasuje do grupowania dzielnic) czy dokładna pinezka (wtedy złagodzić `0004`)
 - [ ] Ostrzeżenie Next.js na stronie oferty (`/oferty/[id]`): adres oferty odczytywany poza `<Suspense>`. Strona działa, ale przejście do oferty może być wolniejsze.
 - [x] ~~Uruchomić `npm run build` i `npx tsc --noEmit`~~: sprawdzone 22.10, oba przechodzą bez błędów
 
