@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { ListingCard } from "@/components/ListingCard";
-import { AMENITIES, SPECIALTIES, TYPE_LABEL, type ListingType } from "@/data/listings";
+import { AMENITIES, SPECIALTIES, TYPE_LABEL, priceLabel, type ListingType } from "@/data/listings";
+import { MapExplorer } from "@/components/map/MapExplorer";
+import type { MapPoint } from "@/components/map/types";
 import { getListings } from "@/lib/listings";
 
 type Params = Promise<{
@@ -11,7 +13,37 @@ type Params = Promise<{
   dzis?: string;
   natychmiast?: string;
   udogodnienie?: string;
+  widok?: string;
 }>;
+
+type Query = Record<string, string | undefined>;
+
+/** Adres /oferty z tymi samymi filtrami i innym widokiem */
+function viewHref(q: Query, widok: "lista" | "mapa") {
+  const sp = new URLSearchParams();
+  for (const [k, v] of Object.entries(q)) if (v && k !== "widok") sp.set(k, v);
+  if (widok === "mapa") sp.set("widok", "mapa");
+  const qs = sp.toString();
+  return qs ? `/oferty?${qs}` : "/oferty";
+}
+
+function ViewToggle({ q, current }: { q: Query; current: "lista" | "mapa" }) {
+  const item = (v: "lista" | "mapa", label: string) => (
+    <Link
+      href={viewHref(q, v)}
+      aria-current={current === v ? "page" : undefined}
+      className={`rounded-full px-4 py-2 ${current === v ? "bg-ink text-paper" : "text-muted hover:text-ink"}`}
+    >
+      {label}
+    </Link>
+  );
+  return (
+    <nav aria-label="Widok wyników" className="flex rounded-full bg-porcelain p-1 text-sm font-semibold">
+      {item("lista", "Lista")}
+      {item("mapa", "Mapa")}
+    </nav>
+  );
+}
 
 export default function OffersPage({ searchParams }: { searchParams: Params }) {
   return (
@@ -22,7 +54,8 @@ export default function OffersPage({ searchParams }: { searchParams: Params }) {
 }
 
 async function Offers({ searchParams }: { searchParams: Params }) {
-  const { miasto = "", typ = "", specjalizacja = "", dzis, natychmiast, udogodnienie = "" } = await searchParams;
+  const query = await searchParams;
+  const { miasto = "", typ = "", specjalizacja = "", dzis, natychmiast, udogodnienie = "", widok } = query;
   const listings = await getListings();
   const CITIES = Array.from(new Set(listings.map((l) => l.city))).sort((a, b) => a.localeCompare(b, "pl"));
 
@@ -35,6 +68,56 @@ async function Offers({ searchParams }: { searchParams: Params }) {
       (!natychmiast || l.confirmation === "instant") &&
       (!udogodnienie || (l.amenities ?? []).includes(udogodnienie)),
   );
+
+  const heading = (
+    <>
+      {typ ? TYPE_LABEL[typ as ListingType] : "Wszystkie miejsca"}
+      {miasto && <span className="text-muted">, {miasto}</span>}
+    </>
+  );
+
+  if (widok === "mapa") {
+    const points: MapPoint[] = results
+      .filter((l) => l.lat != null && l.lng != null)
+      .map((l) => {
+        const p = priceLabel(l);
+        return {
+          id: l.id,
+          title: l.title,
+          salon: l.salon,
+          place: l.district || l.city,
+          typeLabel: TYPE_LABEL[l.type],
+          lat: l.lat!,
+          lng: l.lng!,
+          freeToday: l.freeToday,
+          priceShort: `${p.value} ${p.unit.replace(" / godz.", "/h").replace(" / dzień", "/dzień").replace(" / mies.", "/mc")}`,
+          tone: l.tone,
+          rating: l.rating,
+          reviews: l.reviews,
+        };
+      });
+    return (
+      <div className="flex flex-col lg:h-[calc(100dvh-61px)]">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 sm:px-6">
+          <div>
+            <h1 className="text-xl font-bold">{heading}</h1>
+            <Link href={viewHref(query, "lista")} className="text-sm text-muted underline underline-offset-4">
+              Zmień filtry
+            </Link>
+          </div>
+          <ViewToggle q={query} current="mapa" />
+        </div>
+        {points.length === 0 ? (
+          <div className="mx-auto max-w-xl p-10 text-center">
+            <p className="font-semibold">Brak ofert z lokalizacją dla tych filtrów.</p>
+            <p className="mt-1 text-muted">Zmień miasto lub filtry albo wróć do widoku listy.</p>
+          </div>
+        ) : (
+          <MapExplorer key={JSON.stringify(query)} points={points} withoutLocation={results.length - points.length} />
+        )}
+      </div>
+    );
+  }
 
   const select = "w-full rounded-lg border border-line bg-paper px-3 py-2.5 outline-none focus:border-ink";
 
@@ -103,10 +186,10 @@ async function Offers({ searchParams }: { searchParams: Params }) {
       </aside>
 
       <section>
-        <h1 className="text-3xl font-bold">
-          {typ ? TYPE_LABEL[typ as ListingType] : "Wszystkie miejsca"}
-          {miasto && <span className="text-muted">, {miasto}</span>}
-        </h1>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h1 className="text-3xl font-bold">{heading}</h1>
+          <ViewToggle q={query} current="lista" />
+        </div>
         <p className="mt-1 text-muted">
           {results.length} {results.length === 1 ? "oferta" : results.length < 5 && results.length > 1 ? "oferty" : "ofert"}
         </p>

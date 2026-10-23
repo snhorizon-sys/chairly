@@ -3,7 +3,10 @@
 ## Zaplanowane
 
 - [ ] **Wybór czasu wynajmu przez najemcę:** godziny, dni, miesiące i dowolna liczba każdej z tych jednostek (np. 3 dni, 2 miesiące). Dziś okienko rezerwacji pozwala wybrać tylko tryb (godziny / dzień / miesiąc) i, dla godzin, ich liczbę.
-- [ ] **Mapa w wyszukiwarce:** wybrać kierunek z `Chairly-mapa-propozycje.pdf` (A: suwak godziny, B: dzielnice, C: czas dojazdu). Rekomendacja: A + grupowanie dzielnic z B. Technicznie: MapLibre + MapTiler, współrzędne `lat`/`lng` z adresu salonu.
+- [x] **Mapa w wyszukiwarce (wersja A):** przełącznik Lista / Mapa w `/oferty`, suwak godziny, pinezki „do 16:00 / od 17:00 / dziś pełne”, lista obok mapy. Kafelki OpenFreeMap (bez klucza). Wymaga migracji `0005_map_points.sql`.
+- [ ] Mapa: współrzędne nowych salonów z adresu (geokodowanie przy zapisie salonu w panelu). Dziś na mapie są tylko salony z uzupełnionymi `lat`/`lng`.
+- [ ] Mapa: mała mapka okolicy na stronie oferty i przycisk „W pobliżu mnie” na stronie głównej.
+- [ ] Mapa: grupowanie pinezek w dzielnice przy oddaleniu (kierunek B z `Chairly-mapa-propozycje.pdf`).
 
 ## Znane braki (ustalone przy pracy nad wyglądem w stylu Airbnb)
 
@@ -21,6 +24,14 @@
 - [x] ~~Uruchomić `npm run build` i `npx tsc --noEmit`~~: sprawdzone 22.10, oba przechodzą bez błędów
 
 ## Dziennik zmian
+
+### 23.10.2026
+
+**SNHorizon + Claude**
+- Mapa w wyszukiwarce (wersja A z PDF): na `/oferty` przełącznik **Lista / Mapa**, mapa miasta z pinezkami, suwak „Wolne dziś” i wybór długości (1 / 2 / 4 h), lista ofert obok mapy, karta oferty po kliknięciu pinezki.
+  - Pliki: `src/components/map/*`, `src/lib/availability.ts`, `src/app/oferty/page.tsx`, `src/lib/listings.ts`, `src/data/listings.ts`, `package.json` (`maplibre-gl`).
+- Prywatność: mapa pokazuje punkt przybliżony (przesunięty o kilkaset metrów), dokładny adres dalej ukryty (0004). Migracja `0005_map_points.sql`.
+- Plik `supabase/do-wklejenia-0003-0005.sql`: migracje 0003, 0004 i 0005 w jednym pliku, bezpieczny do ponownego uruchomienia. **Już uruchomiony w Supabase 23.10**, nie trzeba nic robić w bazie.
 
 ### 22.10.2026
 

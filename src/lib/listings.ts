@@ -43,6 +43,8 @@ type CardRow = {
   floor: string | null;
   has_elevator: boolean | null;
   parking: string | null;
+  lat?: number | null; // z widoku listing_cards po migracji z mapą
+  lng?: number | null;
 };
 
 type RuleRow = { listing_id: string; start_time: string; end_time: string };
@@ -119,6 +121,8 @@ export async function getListings(): Promise<Listing[]> {
     floor: row.floor ?? undefined,
     hasElevator: row.has_elevator ?? undefined,
     parking: row.parking ?? undefined,
+    lat: row.lat ?? undefined,
+    lng: row.lng ?? undefined,
   }));
 }
 

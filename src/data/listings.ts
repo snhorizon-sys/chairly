@@ -9,6 +9,9 @@ export type Listing = {
   salon: string;
   city: string;
   district: string;
+  // przybliżona lokalizacja (środek okolicy, nie dokładny adres)
+  lat?: number;
+  lng?: number;
   specialties: string[];
   priceHour?: number;
   priceDay?: number;
@@ -106,6 +109,8 @@ export const SPECIALTIES = [
 export const sampleListings: Listing[] = [
   {
     id: "fotel-jezyce",
+    lat: 52.4122,
+    lng: 16.9004,
     type: "stanowisko",
     title: "Fotel fryzjerski przy oknie",
     salon: "Studio Lustro",
@@ -141,6 +146,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "gabinet-kosmetologiczny-wilda",
+    lat: 52.3925,
+    lng: 16.9195,
     type: "stanowisko",
     title: "Gabinet kosmetologiczny z łóżkiem",
     salon: "Skin Room",
@@ -175,6 +182,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "stanowisko-nails-stare-miasto",
+    lat: 52.4086,
+    lng: 16.9338,
     type: "stanowisko",
     title: "Stanowisko do stylizacji paznokci",
     salon: "Nail Bar Rynek",
@@ -209,6 +218,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "barber-grunwald",
+    lat: 52.3988,
+    lng: 16.8792,
     type: "stanowisko",
     title: "Fotel barberski",
     salon: "Grunwald Barbers",
@@ -242,6 +253,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "sala-szkoleniowa-centrum",
+    lat: 52.404,
+    lng: 16.9222,
     type: "sala",
     title: "Sala szkoleniowa na 12 osób",
     salon: "Akademia Forma",
@@ -278,6 +291,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "event-loft-garbary",
+    lat: 52.4128,
+    lng: 16.9405,
     type: "event",
     title: "Loft na pokazy i premiery",
     salon: "Garbary Loft",
@@ -313,6 +328,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "pmu-warszawa-mokotow",
+    lat: 52.1932,
+    lng: 21.0251,
     type: "stanowisko",
     title: "Gabinet do makijażu permanentnego",
     salon: "Brow Atelier",
@@ -346,6 +363,8 @@ export const sampleListings: Listing[] = [
   },
   {
     id: "masaz-wroclaw",
+    lat: 51.0802,
+    lng: 17.0198,
     type: "stanowisko",
     title: "Pokój do masażu",
     salon: "Oaza Body",
